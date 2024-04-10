@@ -515,7 +515,7 @@ namespace osTicket\Mail {
          *
          */
         public function getRawEmail(int $i) {
-            return $this->getRawHeader($i) . $this->getRawContent($i);
+            return $this->getRawHeader($i) . "\r\n\r\n" . $this->getRawContent($i);
         }
 
         /*
