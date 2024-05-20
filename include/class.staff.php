@@ -713,7 +713,7 @@ implements AuthenticatedUser, EmailContact, TemplateVariable, Searchable {
                 'child_thread__referrals__team__team_id__in' => $teams)));
             $assigned->add($childRefTeam);
         }
-        $visibility = Q::any(new Q(array('status__state'=>'open', $assigned)));
+        $visibility = Q::any(new Q(array('status__state__in'=>['open', 'closed'], $assigned)));
         // -- If access is limited to assigned only, return assigned
         if ($this->isAccessLimited())
             return $visibility;
