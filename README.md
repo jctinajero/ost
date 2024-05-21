@@ -27,7 +27,7 @@ Requirements
   * MySQL database version 5.5 (or greater)
 
 ### Recommendations
-  * fileinfo, gd, gettext, imap, intl, json, mbstring, Zend OPcache, phar,
+  * ctype, fileinfo, gd, gettext, imap, intl, json, mbstring, Zend OPcache, phar,
     xml, xml-dom, and zip extensions for PHP
   * APCu module enabled and configured for PHP
 

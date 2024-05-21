@@ -11,7 +11,11 @@ $extensions = array(
             ),
         'imap' => array(
             'name' => 'imap',
-            'desc' => __('Used for email fetching')
+            'desc' => __('Useful for email processing')
+            ),
+        'ctype' => array(
+            'name' => 'ctype',
+            'desc' => __('Required for email fetching')
             ),
         'xml' => array(
             'name' => 'xml',

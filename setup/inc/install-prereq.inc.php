@@ -25,23 +25,25 @@ if(!defined('SETUPINC')) die('Kwaheri!');
             <ul class="progress">
                 <li class="<?php echo extension_loaded('gd')?'yes':'no'; ?>">Gdlib <?php echo __('Extension');?></li>
                 <li class="<?php echo extension_loaded('imap')?'yes':'no'; ?>">PHP IMAP <?php echo __('Extension');?> &mdash; <em><?php
-                    echo __('Required for mail fetching');?></em></li>
-                <li class="<?php echo extension_loaded('xml') ?'yes':'no'; ?>">PHP XML <?php echo __('Extension');?> <?php
-                    echo __('(for XML API)');?></li>
-                <li class="<?php echo extension_loaded('dom') ?'yes':'no'; ?>">PHP XML-DOM <?php echo __('Extension');?> <?php
-                    echo __('(for HTML email processing)');?></li>
-                <li class="<?php echo extension_loaded('json')?'yes':'no'; ?>">PHP JSON <?php echo __('Extension');?> <?php
-                    echo __('(faster performance)');?></li>
+                    echo __('Useful for email processing');?></em></li>
+                <li class="<?php echo extension_loaded('ctype')?'yes':'no'; ?>">PHP CTYPE <?php echo __('Extension');?> &mdash; <em><?php
+                    echo __('Required for email fetching');?></em></li>
+                <li class="<?php echo extension_loaded('xml') ?'yes':'no'; ?>">PHP XML <?php echo __('Extension');?> &mdash; <?php
+                    echo __('Required for XML API');?></li>
+                <li class="<?php echo extension_loaded('dom') ?'yes':'no'; ?>">PHP XML-DOM <?php echo __('Extension');?> &mdash; <?php
+                    echo __('Useful for HTML email processing');?></li>
+                <li class="<?php echo extension_loaded('json')?'yes':'no'; ?>">PHP JSON <?php echo __('Extension');?> &mdash; <?php
+                    echo __('Recommended for faster performance');?></li>
                 <li class="<?php echo extension_loaded('mbstring')?'yes':'no'; ?>">Mbstring <?php echo __('Extension');?> &mdash; <?php
-                    echo __('recommended for all installations');?></li>
+                    echo __('Recommended for all installations');?></li>
                 <li class="<?php echo extension_loaded('phar')?'yes':'no'; ?>">Phar <?php echo __('Extension');?> &mdash; <?php
-                    echo __('recommended for plugins and language packs');?></li>
+                    echo __('Recommended for plugins and language packs');?></li>
                 <li class="<?php echo extension_loaded('intl')?'yes':'no'; ?>">Intl <?php echo __('Extension');?> &mdash; <?php
-                    echo __('recommended for improved localization');?></li>
+                    echo __('Recommended for improved localization');?></li>
                 <li class="<?php echo extension_loaded('apcu')?'yes':'no'; ?>">APCu <?php echo __('Extension');?> &mdash; <?php
-                    echo __('(faster performance)');?></li>
+                    echo __('Recommended for faster performance');?></li>
                 <li class="<?php echo extension_loaded('Zend OPcache')?'yes':'no'; ?>">Zend OPcache <?php echo __('Extension');?> &mdash; <?php
-                    echo __('(faster performance)');?></li>
+                    echo __('Recommended for faster performance');?></li>
             </ul>
             <div id="bar">
                 <form method="post" action="install.php">
