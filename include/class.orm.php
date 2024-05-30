@@ -2871,7 +2871,7 @@ class MySqlCompiler extends SqlCompiler {
         $table = ($rmeta['view'])
             // XXX: Support parameters from the nested query
             ? $rmodel::getSqlAddParams($this)
-            : $this->quote($rmeta['table']);
+            : $this->quote($rmeta['table'], true);
         $base = "{$join}{$table} {$alias}";
         return array($base, $constraints);
     }
