@@ -6178,7 +6178,7 @@ class TransferForm extends Form {
             break;
         default:
             throw new Exception(sprintf(__('%s: Unknown template style %s'),
-                        get_class(), $options['template']));
+                        get_class($this), $options['template']));
         }
 
         $form = $this;

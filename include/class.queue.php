@@ -1598,7 +1598,7 @@ abstract class QueueColumnAnnotation {
     }
 
     function getClassName() {
-        return @$this->config['c'] ?: get_class();
+        return @$this->config['c'] ?: get_class($this);
     }
 
     static function getAnnotations($root) {

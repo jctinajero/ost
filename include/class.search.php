@@ -471,7 +471,7 @@ class MysqlSearchBackend extends SearchBackend {
      * not indexed in the _search table and add it to the index.
      */
     function IndexOldStuff() {
-        $class = get_class();
+        $class = get_class($this);
         $auto_create = function($db_error) use ($class) {
 
             if ($db_error != 1146)
