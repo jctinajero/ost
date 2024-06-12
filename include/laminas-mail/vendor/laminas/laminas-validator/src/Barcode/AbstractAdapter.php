@@ -1,24 +1,33 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-validator for the canonical source repository
- * @copyright https://github.com/laminas/laminas-validator/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-validator/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Validator\Barcode;
+
+use function chr;
+use function is_array;
+use function is_string;
+use function method_exists;
+use function str_replace;
+use function str_split;
+use function strlen;
+use function substr;
 
 abstract class AbstractAdapter implements AdapterInterface
 {
     /**
      * Allowed options for this adapter
-     * @var array
+     *
+     * @var array{
+     *     length: int|array|'even'|'odd'|null,
+     *     characters: int|string|array|null,
+     *     checksum: null|string,
+     *     useChecksum: null|bool,
+     * }
      */
     protected $options = [
-        'length'     => null,   // Allowed barcode lengths, integer, array, string
-        'characters' => null,   // Allowed barcode characters
-        'checksum'   => null,   // Callback to checksum function
-        'useChecksum' => true,  // Is a checksum value included?, boolean
+        'length'      => null, // Allowed barcode lengths, integer, array, string
+        'characters'  => null, // Allowed barcode characters
+        'checksum'    => null, // Callback to checksum function
+        'useChecksum' => true, // Is a checksum value included?, boolean
     ];
 
     /**
@@ -34,31 +43,41 @@ abstract class AbstractAdapter implements AdapterInterface
         }
 
         $fixum  = strlen($value);
-        $found  = false;
         $length = $this->getLength();
+
         if (is_array($length)) {
             foreach ($length as $value) {
-                if ($fixum == $value) {
-                    $found = true;
+                if ($fixum === $value) {
+                    return true;
                 }
 
-                if ($value == -1) {
-                    $found = true;
+                if ($value === -1) {
+                    return true;
                 }
             }
-        } elseif ($fixum == $length) {
-            $found = true;
-        } elseif ($length == -1) {
-            $found = true;
-        } elseif ($length == 'even') {
-            $count = $fixum % 2;
-            $found = 0 == $count;
-        } elseif ($length == 'odd') {
-            $count = $fixum % 2;
-            $found = 1 == $count;
+
+            return false;
         }
 
-        return $found;
+        if ($fixum === $length) {
+            return true;
+        }
+
+        if ($length === -1) {
+            return true;
+        }
+
+        if ($length === 'even') {
+            $count = $fixum % 2;
+            return 0 === $count;
+        }
+
+        if ($length === 'odd') {
+            $count = $fixum % 2;
+            return 1 === $count;
+        }
+
+        return false;
     }
 
     /**
@@ -74,7 +93,7 @@ abstract class AbstractAdapter implements AdapterInterface
         }
 
         $characters = $this->getCharacters();
-        if ($characters == 128) {
+        if ($characters === 128) {
             for ($x = 0; $x < 128; ++$x) {
                 $value = str_replace(chr($x), '', $value);
             }
@@ -101,7 +120,7 @@ abstract class AbstractAdapter implements AdapterInterface
     public function hasValidChecksum($value)
     {
         $checksum = $this->getChecksum();
-        if (! empty($checksum)) {
+        if ($checksum !== null) {
             if (method_exists($this, $checksum)) {
                 return $this->$checksum($value);
             }
@@ -113,7 +132,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Returns the allowed barcode length
      *
-     * @return int|array
+     * @return int|array|string|null
      */
     public function getLength()
     {
@@ -123,7 +142,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Returns the allowed characters
      *
-     * @return int|string|array
+     * @return int|string|array|null
      */
     public function getCharacters()
     {
@@ -133,6 +152,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Returns the checksum function name
      *
+     * @return string|null
      */
     public function getChecksum()
     {
@@ -142,7 +162,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Sets the checksum validation method
      *
-     * @param callable $checksum Checksum method to call
+     * @param string $checksum Checksum method to call
      * @return $this
      */
     protected function setChecksum($checksum)
@@ -154,8 +174,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Sets the checksum validation, if no value is given, the actual setting is returned
      *
-     * @param  bool $check
-     * @return AbstractAdapter|bool
+     * @inheritDoc
      */
     public function useChecksum($check = null)
     {
@@ -182,7 +201,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Sets the allowed characters of this barcode
      *
-     * @param int $characters
+     * @param int|string|array $characters
      * @return $this
      */
     protected function setCharacters($characters)
@@ -214,11 +233,8 @@ abstract class AbstractAdapter implements AdapterInterface
 
         $calc     = $sum % 10;
         $checksum = $calc === 0 ? 0 : 10 - $calc;
-        if ($value[$length + 1] != $checksum) {
-            return false;
-        }
 
-        return true;
+        return $value[$length + 1] === (string) $checksum;
     }
 
     /**
@@ -244,11 +260,8 @@ abstract class AbstractAdapter implements AdapterInterface
 
         $calc     = $sum % 10;
         $checksum = $calc === 0 ? 0 : 10 - $calc;
-        if ($value[$length + 1] != $checksum) {
-            return false;
-        }
 
-        return true;
+        return $value[$length + 1] === (string) $checksum;
     }
 
     /**
@@ -274,11 +287,8 @@ abstract class AbstractAdapter implements AdapterInterface
 
         $calc     = $sum % 10;
         $checksum = $calc === 0 ? 0 : 10 - $calc;
-        if ($value[$length + 1] != $checksum) {
-            return false;
-        }
 
-        return true;
+        return $value[$length + 1] === (string) $checksum;
     }
 
     /**
@@ -299,11 +309,8 @@ abstract class AbstractAdapter implements AdapterInterface
         }
 
         $check %= 10;
-        $check = 10 - $check;
-        if ($check == $checksum) {
-            return true;
-        }
+        $check  = 10 - $check;
 
-        return false;
+        return (string) $check === $checksum;
     }
 }

@@ -1,35 +1,32 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-validator for the canonical source repository
- * @copyright https://github.com/laminas/laminas-validator/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-validator/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Validator;
 
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\ErrorHandler;
 use Traversable;
 
+use function array_key_exists;
+use function is_array;
+use function is_float;
+use function is_int;
+use function is_string;
+use function preg_match;
+
 class Regex extends AbstractValidator
 {
-    const INVALID   = 'regexInvalid';
-    const NOT_MATCH = 'regexNotMatch';
-    const ERROROUS  = 'regexErrorous';
+    public const INVALID   = 'regexInvalid';
+    public const NOT_MATCH = 'regexNotMatch';
+    public const ERROROUS  = 'regexErrorous';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $messageTemplates = [
         self::INVALID   => 'Invalid type given. String, integer or float expected',
         self::NOT_MATCH => "The input does not match against pattern '%pattern%'",
         self::ERROROUS  => "There was an internal error while using the pattern '%pattern%'",
     ];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $messageVariables = [
         'pattern' => 'pattern',
     ];
@@ -37,15 +34,15 @@ class Regex extends AbstractValidator
     /**
      * Regular expression pattern
      *
-     * @var string
+     * @var non-empty-string
      */
     protected $pattern;
 
     /**
      * Sets validator options
      *
-     * @param  string|array|Traversable $pattern
-     * @throws Exception\InvalidArgumentException On missing 'pattern' parameter
+     * @param  non-empty-string|array|Traversable $pattern
+     * @throws Exception\InvalidArgumentException On missing 'pattern' parameter.
      */
     public function __construct($pattern)
     {
@@ -63,7 +60,7 @@ class Regex extends AbstractValidator
             throw new Exception\InvalidArgumentException('Invalid options provided to constructor');
         }
 
-        if (! array_key_exists('pattern', $pattern)) {
+        if (! array_key_exists('pattern', $pattern) || ! is_string($pattern['pattern']) || $pattern['pattern'] === '') {
             throw new Exception\InvalidArgumentException("Missing option 'pattern'");
         }
 
@@ -75,7 +72,7 @@ class Regex extends AbstractValidator
     /**
      * Returns the pattern option
      *
-     * @return string
+     * @return non-empty-string|null
      */
     public function getPattern()
     {
@@ -85,8 +82,8 @@ class Regex extends AbstractValidator
     /**
      * Sets the pattern option
      *
-     * @param  string $pattern
-     * @throws Exception\InvalidArgumentException if there is a fatal error in pattern matching
+     * @param non-empty-string $pattern
+     * @throws Exception\InvalidArgumentException If there is a fatal error in pattern matching.
      * @return $this Provides a fluent interface
      */
     public function setPattern($pattern)
@@ -110,7 +107,7 @@ class Regex extends AbstractValidator
     /**
      * Returns true if and only if $value matches against the pattern option
      *
-     * @param  string $value
+     * @param  mixed $value
      * @return bool
      */
     public function isValid($value)
@@ -123,7 +120,7 @@ class Regex extends AbstractValidator
         $this->setValue($value);
 
         ErrorHandler::start();
-        $status = preg_match($this->pattern, $value);
+        $status = preg_match($this->pattern, (string) $value);
         ErrorHandler::stop();
         if (false === $status) {
             $this->error(self::ERROROUS);
