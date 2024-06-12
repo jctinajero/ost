@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: OST
+  labels:
+    app: OST
+    kubernetes.azure.com/generator: devhub
+  namespace: namespace-workflow-1718229258394
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: OST
+  template:
+    metadata:
+      labels:
+        app: OST
+    spec:
+      containers:
+        - name: OST
+          image: ticmx.azurecr.io/image-workflow-1718229258394:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
